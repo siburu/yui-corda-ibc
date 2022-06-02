@@ -5,9 +5,7 @@ option go_package = "github.com/hyperledger-labs/yui-corda-ibc/go/x/ibc/light-cl
 
 import "ibc/lightclients/corda/v1/corda-types.proto";
 
-message ClientState {
-  string id = 1;
-}
+message ClientState {}
 
 message ConsensusState {
   StateRef base_id = 1;

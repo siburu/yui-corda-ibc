@@ -25,21 +25,20 @@ import net.corda.core.serialization.SerializationFactory
 data class CordaClientState constructor(
     override val participants: List<AbstractParty>,
     override val baseId: StateRef,
+    override val id: Identifier,
     val cordaClientState: Corda.ClientState,
     val cordaConsensusState: Corda.ConsensusState
 ) : ClientState {
-    override val id get() = Identifier(cordaClientState.id)
     override val clientState get() = Any.pack(Corda.ClientState.getDefaultInstance()!!, "")!!
     override val consensusStates get() = mapOf(HEIGHT to CordaConsensusState(cordaConsensusState))
 
     constructor(host: Host, id: Identifier, cordaClientState: Corda.ClientState, cordaConsensusState: Corda.ConsensusState) : this(
         host.participants,
         host.baseId,
+        id,
         cordaClientState,
         cordaConsensusState
-    ) {
-        require(id.id == cordaClientState.id)
-    }
+    )
 
     private val counterpartyBaseId get() = CordaConsensusState(cordaConsensusState).baseId
     private val counterpartyNotaryKey get() = CordaConsensusState(cordaConsensusState).notaryKey

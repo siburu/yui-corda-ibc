@@ -156,7 +156,7 @@ class IbcContractTests {
         val host = label(HOST, self).outputStateAndRef<Host>()
         val counterpartyHost = label(HOST, counterparty).outputStateAndRef<Host>()
         val msg = MsgCreateClient.newBuilder()
-                .setClientState(Any.pack(Corda.ClientState.newBuilder().setId(CLIENT_ID).build(), ""))
+                .setClientState(Any.pack(Corda.ClientState.getDefaultInstance(), ""))
                 .setConsensusState(counterpartyHost.state.data.let{it.getConsensusState(it.getCurrentHeight())}.consensusState)
                 .build()
         val handler = HandleClientCreate(msg)

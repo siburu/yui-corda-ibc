@@ -18,16 +18,11 @@ async fn query_client(
     Ok(v1client::query_client::QueryClient::connect(endpoint).await?)
 }
 
-pub async fn create_clients(
-    endpoint_a: String,
-    endpoint_b: String,
-    client_id_a: String,
-    client_id_b: String,
-) -> Result<()> {
-    let client_state_a = v1corda::ClientState { id: client_id_a };
+pub async fn create_clients(endpoint_a: String, endpoint_b: String) -> Result<()> {
+    let client_state_a = v1corda::ClientState {};
     let client_state_a = util::pack_any(CLIENT_STATE_TYPE_URL.to_owned(), &client_state_a)?;
 
-    let client_state_b = v1corda::ClientState { id: client_id_b };
+    let client_state_b = v1corda::ClientState {};
     let client_state_b = util::pack_any(CLIENT_STATE_TYPE_URL.to_owned(), &client_state_b)?;
 
     let host_a = host::query_host(endpoint_a.clone()).await?;

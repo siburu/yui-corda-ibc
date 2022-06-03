@@ -32,7 +32,7 @@ class LightClient: LightClientGrpc.LightClientImplBase() {
     }
 
     private fun withClientState(state: Lightclientd.State, f: (cs: CordaClientState) -> Unit) {
-        val cs = CordaClientState(emptyList(), StateRef(SecureHash.zeroHash, 0), state.clientState, state.consensusState)
+        val cs = CordaClientState(emptyList(), StateRef(SecureHash.zeroHash, 0), Identifier(""), state.clientState, state.consensusState)
         f(cs)
     }
 

@@ -75,13 +75,13 @@ class IbcFlowTests {
         val expectedClientId = "corda-ibc-0"
 
         val clientAid = ibcA.createClient(MsgCreateClient.newBuilder().apply{
-            clientState = Any.pack(Corda.ClientState.newBuilder().setId(expectedClientId).build(), "")
+            clientState = Any.pack(Corda.ClientState.getDefaultInstance(), "")
             consensusState = ibcB.host().getConsensusState(HEIGHT).consensusState
         }.build())
         assert(clientAid.id == expectedClientId)
 
         val clientBid = ibcB.createClient(MsgCreateClient.newBuilder().apply{
-            clientState = Any.pack(Corda.ClientState.newBuilder().setId(expectedClientId).build(), "")
+            clientState = Any.pack(Corda.ClientState.getDefaultInstance(), "")
             consensusState = ibcA.host().getConsensusState(HEIGHT).consensusState
         }.build())
         assert(clientAid.id == expectedClientId)
@@ -323,15 +323,12 @@ class IbcFlowTests {
         ibcB.allocateFund(b2.addr, USD, Amount.fromLong(2000))
 
         // create clients on both chains
-        val expectedClientId = "corda-ibc-0"
-
         val clientAid = ibcA.createClient(MsgCreateClient.newBuilder().apply {
-            clientState = Any.pack(Corda.ClientState.newBuilder().setId(expectedClientId).build(), "")
+            clientState = Any.pack(Corda.ClientState.getDefaultInstance(), "")
             consensusState = ibcB.host().getConsensusState(HEIGHT).consensusState
         }.build())
-
         val clientBid = ibcB.createClient(MsgCreateClient.newBuilder().apply {
-            clientState = Any.pack(Corda.ClientState.newBuilder().setId(expectedClientId).build(), "")
+            clientState = Any.pack(Corda.ClientState.getDefaultInstance(), "")
             consensusState = ibcA.host().getConsensusState(HEIGHT).consensusState
         }.build())
 
@@ -564,15 +561,12 @@ class IbcFlowTests {
         ibcBankA.allocateCash(alice.party, 1000, JPY.currency)
 
         // create clients on both chains
-        val expectedClientId = "corda-ibc-0"
-
         val clientAid = ibcAlice.createClient(MsgCreateClient.newBuilder().apply {
-            clientState = Any.pack(Corda.ClientState.newBuilder().setId(expectedClientId).build(), "")
+            clientState = Any.pack(Corda.ClientState.getDefaultInstance(), "")
             consensusState = ibcBob.host().getConsensusState(HEIGHT).consensusState
         }.build())
-
         val clientBid = ibcBob.createClient(MsgCreateClient.newBuilder().apply {
-            clientState = Any.pack(Corda.ClientState.newBuilder().setId(expectedClientId).build(), "")
+            clientState = Any.pack(Corda.ClientState.getDefaultInstance(), "")
             consensusState = ibcAlice.host().getConsensusState(HEIGHT).consensusState
         }.build())
 

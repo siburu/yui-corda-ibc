@@ -146,12 +146,12 @@ object Client {
 
         // createClient @ A
         clientTxServiceA.createClient(MsgCreateClient.newBuilder()
-                .setClientState(Any.pack(Corda.ClientState.newBuilder().setId(CLIENT_A).build(), ""))
+                .setClientState(Any.pack(Corda.ClientState.getDefaultInstance(), ""))
                 .setConsensusState(consensusStateB.consensusState)
                 .build())
         // createClient @ B
         clientTxServiceB.createClient(MsgCreateClient.newBuilder()
-                .setClientState(Any.pack(Corda.ClientState.newBuilder().setId(CLIENT_B).build(), ""))
+                .setClientState(Any.pack(Corda.ClientState.getDefaultInstance(), ""))
                 .setConsensusState(consensusStateA.consensusState)
                 .build())
 

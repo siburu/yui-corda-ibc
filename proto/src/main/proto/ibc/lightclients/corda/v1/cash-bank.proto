@@ -35,9 +35,10 @@ message CashBank {
     map<string, string> ibcDenomToDenom = 1;
   }
 
-  repeated Party participants = 1;
-  StateRef baseId = 2;
-  Party owner = 3;
-  SupplyMap supply = 4;
-  IbcDenomMap denoms = 5;
+  Party notary = 1;
+  repeated Party validators = 2;
+  StateRef baseId = 3;
+  Party owner = 4;
+  SupplyMap supply = 5;
+  IbcDenomMap denoms = 6;
 }

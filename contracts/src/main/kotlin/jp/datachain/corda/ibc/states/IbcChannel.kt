@@ -6,11 +6,12 @@ import jp.datachain.corda.ibc.ics24.Host
 import jp.datachain.corda.ibc.ics24.Identifier
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.StateRef
-import net.corda.core.identity.AbstractParty
+import net.corda.core.identity.Party
 
 @BelongsToContract(Ibc::class)
 data class IbcChannel private constructor (
-        override val participants: List<AbstractParty>,
+        override val notary: Party,
+        override val validators: List<Party>,
         override val baseId: StateRef,
         override val id: Identifier,
         val portId: Identifier,
@@ -23,7 +24,8 @@ data class IbcChannel private constructor (
         val acknowledgements: Map<Long, ChannelOuterClass.Acknowledgement>
 ) : IbcState {
     constructor(host: Host, portId: Identifier, chanId: Identifier, end: ChannelOuterClass.Channel) : this(
-            host.participants,
+            host.notary,
+            host.validators,
             host.baseId,
             chanId,
             portId,

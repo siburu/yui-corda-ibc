@@ -3,6 +3,8 @@ package jp.datachain.corda.ibc.ics26
 import jp.datachain.corda.ibc.states.IbcFungibleState
 import jp.datachain.corda.ibc.states.IbcState
 import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.StateRef
+import net.corda.core.identity.Party
 
 class Context(val inStates: Collection<ContractState>, val refStates: Collection<ContractState>) {
     val outStates = mutableSetOf<ContractState>()
@@ -10,6 +12,10 @@ class Context(val inStates: Collection<ContractState>, val refStates: Collection
     private val inIbcStates get() = inStates.mapNotNull{it as? IbcState}
     private val refIbcStates get() = refStates.mapNotNull{it as? IbcState}
     private val outIbcStates get() = outStates.mapNotNull{it as? IbcState}
+
+    val inNotary: Party get() = (inIbcStates + refIbcStates).map{it.notary}.distinct().single()
+    val inValidators: List<Party> get() = (inIbcStates + refIbcStates).map{it.validators}.distinct().single()
+    val inBaseId: StateRef get() = (inIbcStates + refIbcStates).map{it.baseId}.distinct().single()
 
     inline fun <reified T: ContractState> getInputs(): List<T> {
         return inStates.filterIsInstance<T>()
@@ -38,9 +44,11 @@ class Context(val inStates: Collection<ContractState>, val refStates: Collection
                 inIbcStates.filter{it !is IbcFungibleState<*>}.map{it.linearId}))
 
         // Confirm all baseIds in states are same
-        val baseId = outIbcStates.first().baseId
-        inIbcStates.forEach{require(it.baseId == baseId)}
-        refIbcStates.forEach{require(it.baseId == baseId)}
-        outIbcStates.forEach{require(it.baseId == baseId)}
+        val outNotary = outIbcStates.map{it.notary}.distinct().single()
+        require(inNotary == outNotary)
+        val outValidators = outIbcStates.map{it.validators}.distinct().single()
+        require(inValidators == outValidators)
+        val outBaseId = outIbcStates.map{it.baseId}.distinct().single()
+        require(inBaseId == outBaseId)
     }
 }

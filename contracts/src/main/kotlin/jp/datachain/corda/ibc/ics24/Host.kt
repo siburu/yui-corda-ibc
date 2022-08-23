@@ -13,14 +13,13 @@ import jp.datachain.corda.ibc.types.Timestamp
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.StateRef
-import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.Party
 
 @BelongsToContract(Ibc::class)
 data class Host constructor (
-        override val participants: List<AbstractParty>,
+        override val notary: Party,
+        override val validators: List<Party>,
         override val baseId: StateRef,
-        val notary: Party,
         val nextClientSequence: Long,
         val nextConnectionSequence: Long,
         val nextChannelSequence: Long,
@@ -29,9 +28,9 @@ data class Host constructor (
     override val id = Identifier("host")
 
     constructor(genesisAndRef: StateAndRef<Genesis>) : this(
-            genesisAndRef.state.data.participants,
-            genesisAndRef.ref,
             genesisAndRef.state.notary,
+            genesisAndRef.state.data.validators,
+            genesisAndRef.ref,
             0,
             0,
             0,

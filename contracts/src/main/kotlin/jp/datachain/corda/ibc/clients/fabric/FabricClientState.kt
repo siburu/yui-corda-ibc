@@ -20,16 +20,17 @@ import jp.datachain.corda.ibc.ics24.Host
 import jp.datachain.corda.ibc.ics24.Identifier
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.StateRef
-import net.corda.core.identity.AbstractParty
+import net.corda.core.identity.Party
 
 @BelongsToContract(Ibc::class)
 data class FabricClientState constructor(
-    override val participants: List<AbstractParty>,
-    override val baseId: StateRef,
-    val fabricClientState: Fabric.ClientState,
-    val fabricConsensusStates: Map<Long, Fabric.ConsensusState>
+        override val notary: Party,
+        override val validators: List<Party>,
+        override val baseId: StateRef,
+        override val id: Identifier,
+        val fabricClientState: Fabric.ClientState,
+        val fabricConsensusStates: Map<Long, Fabric.ConsensusState>
 ) : ClientState {
-    override val id get() = Identifier(fabricClientState.id)
     override val clientState get() = Any.pack(fabricClientState, "")!!
     override val consensusStates get() = fabricConsensusStates
         .mapKeys { e ->
@@ -43,10 +44,12 @@ data class FabricClientState constructor(
         }
 
     constructor(host: Host, id: Identifier, fabricClientState: Fabric.ClientState, fabricConsensusState: Fabric.ConsensusState) : this(
-        host.participants,
-        host.baseId,
-        fabricClientState,
-        mapOf(fabricClientState.lastChaincodeHeader.sequence.value to fabricConsensusState)
+            host.notary,
+            host.validators,
+            host.baseId,
+            id,
+            fabricClientState,
+            mapOf(fabricClientState.lastChaincodeHeader.sequence.value to fabricConsensusState)
     ) {
         require(id.id == fabricClientState.id)
     }

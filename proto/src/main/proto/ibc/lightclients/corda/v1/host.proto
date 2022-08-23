@@ -16,9 +16,9 @@ service HostService {
 }
 
 message Host {
-  repeated Party participants = 1;
-  StateRef base_id = 2;
-  Party notary = 3;
+  Party notary = 1;
+  repeated Party validators = 2;
+  StateRef base_id = 3;
   uint64 nextClientSequence = 4;
   uint64 nextConnectionSequence = 5;
   uint64 nextChannelSequence = 6;

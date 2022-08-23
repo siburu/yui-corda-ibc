@@ -10,21 +10,21 @@ import net.corda.core.transactions.TransactionBuilder
 
 @StartableByRPC
 @InitiatingFlow
-class IbcGenesisCreateFlow(private val participants: List<Party>) : FlowLogic<SignedTransaction>() {
+class IbcGenesisCreateFlow(private val validators: List<Party>) : FlowLogic<SignedTransaction>() {
     @Suspendable
     override fun call() : SignedTransaction {
-        require(participants.contains(ourIdentity))
+        require(validators.contains(ourIdentity)){"Flow initiator must be one of validators"}
 
         val notary = serviceHub.networkMapCache.notaryIdentities.single()
 
         val builder = TransactionBuilder(notary)
 
         builder.addCommand(Ibc.Commands.GenesisCreate(), ourIdentity.owningKey)
-                .addOutputState(Genesis(participants))
+                .addOutputState(Genesis(validators))
 
         val tx = serviceHub.signInitialTransaction(builder)
 
-        val sessions = (participants - ourIdentity).map{initiateFlow(it)}
+        val sessions = (validators - ourIdentity).map{initiateFlow(it)}
         return subFlow(FinalityFlow(tx, sessions))
     }
 }

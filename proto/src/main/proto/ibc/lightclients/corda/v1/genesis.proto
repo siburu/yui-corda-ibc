@@ -10,7 +10,7 @@ service GenesisService {
 }
 
 message CreateGenesisRequest {
-  repeated Party participants = 1;
+  repeated Party validators = 1;
 }
 
 message CreateGenesisResponse {

@@ -10,8 +10,9 @@ import java.security.PublicKey
 
 data class CordaConsensusState(val cordaConsensusState: Corda.ConsensusState) : ConsensusState {
     override val consensusState get() = Any.pack(cordaConsensusState, "")!!
-    val baseId get() = cordaConsensusState.baseId.into()
-    val notaryKey get() = cordaConsensusState.notaryKey.into()
+    val baseId: StateRef get() = cordaConsensusState.baseId.into()
+    val notaryKey: PublicKey get() = cordaConsensusState.notaryKey.into()
+    val validatorKeys: List<PublicKey> get() = cordaConsensusState.validatorKeysList.map{it.into()}
 
     constructor(baseId: StateRef, notaryKey: PublicKey): this(Corda.ConsensusState.newBuilder()
             .setBaseId(baseId.into())

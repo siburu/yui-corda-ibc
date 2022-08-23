@@ -8,8 +8,9 @@ import "ibc/lightclients/corda/v1/corda-types.proto";
 message ClientState {}
 
 message ConsensusState {
-  StateRef base_id = 1;
-  PublicKey notary_key = 2;
+  PublicKey notary_key = 1;
+  repeated PublicKey validator_keys = 2;
+  StateRef base_id = 3;
 }
 
 message Header {}
